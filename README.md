@@ -12,12 +12,12 @@
 > python manage.py createsuperuser
 
 > > 여기에서 django.db.utils.OperationalError: no such table: 오류가 발생했습니다.  
-> > 계속해서 createsuperuser를 실행하는 과정에서 db의 table을 지웠고, db.sqlite3  
-> > 파일도 지워버리면서 생긴 오류 같았습니다.  
-> > 이를 해결하기 위해 db.sqlite3 파일을 삭제하고, makemigrations을 우선 진행했습니다.  
-> > 다음으로  
-> > """ python manage.py migrate --run-syncdb """ 를 실행했습니다.  
-> > --run-syncdb 옵션은 migration을 하지 않고 앱에 대한 테이블을 만드는 것입니다.  
+계속해서 createsuperuser를 실행하는 과정에서 db의 table을 지웠고, db.sqlite3  
+파일도 지워버리면서 생긴 오류 같았습니다.  
+이를 해결하기 위해 db.sqlite3 파일을 삭제하고, makemigrations을 우선 진행했습니다.  
+다음으로  
+""" python manage.py migrate --run-syncdb """ 를 실행했습니다.  
+--run-syncdb 옵션은 migration을 하지 않고 앱에 대한 테이블을 만드는 것입니다.  
 
 5. superuser를 만들어 테스트가 끝나면 인증 부분을 수정해보도록 하겠습니다.
 
