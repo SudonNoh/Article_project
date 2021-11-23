@@ -19,6 +19,6 @@
 > > """ python manage.py migrate --run-syncdb """ 를 실행했습니다.
 > > --run-syncdb 옵션은 migration을 하지 않고 앱에 대한 테이블을 만드는 것입니다.
 
-5. 
+5. superuser를 만들어 테스트가 끝나면 인증 부분을 수정해보도록 하겠습니다.
 
 
