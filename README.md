@@ -6,4 +6,6 @@
 > django-admin startapp authentication
 
 
-3. BaseUserModel을 만들기 위해 <b>*manager.py*</b> 파일을 authentication app 안에 만들어줍니다.
+3. BaseUserManager를 만들기 위해 <b>*managers.py*</b> 파일을 authentication app 안에 만들어줍니다. 그 안에 class Usermanager를 정의합니다.
+
+4. User 모델을 만들기 위해 <b>*authentication*</b> 폴더 내부에 있는 <b>*models.py*</b> 파일을 열어 수정해줍니다.
