@@ -39,6 +39,33 @@
 11. 이번엔 View를 수정해보도록 하겠습니다. <b>*blog/authentication/api/views.py*</b> 파일을 열어 `LoginAPIView`를 추가해줍니다. 추가한 후 <b>*blog/authentication/api/urls.py*</b> 파일을 열어 url을 설정합니다. 이후 postman에서 login이 정상적으로 이루어지는지 확인해봅니다.
 
 ----
->이 과정에서 post가 정상적으로 이루어지지 않는 경우 "non_field_errors" 라는 오류를 반환합니다. 여기에는 한 가지 문제가 있는데요.<br><br> 일반적으로 이 오류는 serializer가 유효성 검사를 실패하게 만든 모든 필드에 해당됩니다. 즉, 포괄적인 전체 error를 보여줄 때 설정됩니다. 우리가 만든 validator의 경우 validate_email과 같은 필드별 method 대신에 validate method 자체를 override했기 때문에 DRF는 오류에서 반환할 필드를 알지 못하기 때문에 특정 field error를 반환하지 못하고, "non_field_errors"를 반환한 것 입니다.<br><br> 우리는 이 과정을 기본 error 처리를 override해서 다루도록 하겠습니다.
+>이 과정에서 post가 정상적으로 이루어지지 않는 경우 "non_field_errors" 라는 오류를 반환합니다. 여기에는 한 가지 문제가 있는데요.<br><br> 일반적으로 이 오류는 serializer가 유효성 검사를 실패하게 만든 모든 필드에 해당됩니다. 즉, 포괄적인 전체 error를 보여줄 때 설정됩니다. 우리가 만든 validator의 경우 validate_email과 같은 필드별 method 대신에 validate method 자체를 override했기 때문에 DRF는 오류에서 반환할 필드를 알지 못하기 때문에 특정 field error를 반환하지 못하고, "non_field_errors"를 반환한 것 입니다.<br><br> client는 보여지는 error(여기서는 "non_field_errors")를 사용해 표시하기 때문에 저는 간단하게 "non_field_errors"를 "error"로 변경하도록 하겠습니다. <br><br> 이 문제를 해결하기 위해 기본 error 처리를 override하도록 하겠습니다.
 ----
 
+### Overriding EXCEPTION_HANDLER and NON_FIELD_ERRORS_KEY
+
+12. DRF setting 중 하나가 EXCEPTION_HANDLER입니다. 기본 exception handler는 단순하게 오류 dictionary를 반환합니다. 저는 EXCEPTION_HANDLER를 override 하고, NON_FIELD_ERRORS_KEY를 앞서 언급한대로 override하도록 하겠습니다.<br><br> 우선 <b>*blog/core*</b> 라는 폴더를 만들고 그 안에 <b>*blog/core/exceptions.py*</b> 파일을 만들어 줍니다.
+
+13. 그 다음으로 <b>*blog/setting/settings.py*</b> 파일에서 새로운 setting을 추가해줍니다. 그 다음 postman에서 email/password를 invalid data로 전송해봅니다. 그러면 다음과 같은 error message가 뜹니다.
+```json
+{
+    "user": {
+        "errors": {
+            "error": [
+                "A user with this email and password was not found."
+            ]
+        }
+    }
+}
+```
+
+14. 현재 user key 아래에 모든 errors key, error가 존재합니다. 이런 형태는 좋지 못하기 때문에 수정해줄 필요가 있습니다. Rendering할 때 error가 발생하면 user key에서 보여지는 것이 아닌 errors만 보여지도록 하겠습니다. <b>*blog/authentication/api/renderers.py*</b> 파일을 열어서 일부분 추가해줍니다. 그 다음 다시 login 과정에서 invalid data를 보내면 아래와 같은 결과를 얻을 수 있습니다.
+```json
+{
+    "errors": {
+        "error": [
+            "A user with this email and password was not found."
+        ]
+    }
+}
+```
