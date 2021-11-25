@@ -14,6 +14,7 @@ def core_exception_handler(exc, context):
     
     # 우리가 처리할 수 있는 exception error를 이곳에 넣어둔다.
     handlers = {
+        'ProfileDoesNotExist': _handle_generic_error,
         'ValidationError': _handle_generic_error
     }
     

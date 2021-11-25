@@ -10,13 +10,13 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Profile
-        fields = [
+        fields = (
             'username',
             'birth_date',
-            'introdce',
+            'introduce',
             'image',
-        ]
-        read_only_fields = ['username', 'birth_date', ]
+        )
+        read_only_fields = ('username', 'birth_date', )
         
     def get_image(self, obj):
         if obj.image:
