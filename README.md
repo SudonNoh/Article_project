@@ -13,9 +13,9 @@
 `python manage.py createsuperuser`
 
 ----
->여기에서 django.db.utils.OperationalError: no such table: 오류가 발생했는데요. createsuperuser를 실행하는 과정에서 db의 table을 지웠고, db.sqlite3 파일을 지워버리면서 생긴 오류 같았습니다.<br><br>이를 해결하기 위해 db.sqlite3 파일을 삭제하고, makemigrations을 우선 진행했습니다. 다음으로 `python manage.py migrate --run-syncdb` 를 실행했습니다. `--run-syncdb` 옵션은 migration을 하지 않고 앱에 대한 테이블을 만드는 것입니다.
+>여기에서 django.db.utils.OperationalError: no such table: 오류가 발생했는데요. createsuperuser를 실행하는 과정에서 db의 table을 지웠고, db.sqlite3 파일을 지워버리면서 생긴 오류 같았습니다.<br><br>이를 해결하기 위해 db.sqlite3 파일을 삭제하고, makemigrations을 우선 진행했습니다. 다음으로 <br>`python manage.py migrate --run-syncdb` 를 실행했습니다. `--run-syncdb` 옵션은 migration을 하지 않고 앱에 대한 테이블을 만드는 것입니다.
 ----
->django shell에서 model들을 한번에 import 하고 사용하기 위해서 extensions를 설치해줄 필요가 있습니다. `pip install django-extensions` 으로 설치하고 터미널에<br>`python manage.py shell_plus`를 입력해주면 django와 관련된 모듈들이 import 되는 것을 확인할 수 있습니다.<br><br>이제 본인이 정의한 모델명으로 객체에 접근할 수 있습니다. 다음 명령어로 조회해보시기 바랍니다. `User.objects.all()` 여기서 User는 각자 정의한 모델명이므로 작성자에 따라 다를 수 있습니다.
+>django shell에서 model들을 한번에 import 하고 사용하기 위해서 extensions를 설치해줄 필요가 있습니다.<br> `pip install django-extensions` 으로 설치하고 터미널에<br>`python manage.py shell_plus`를 입력해주면 django와 관련된 모듈들이 import 되는 것을 확인할 수 있습니다.<br><br>이제 본인이 정의한 모델명으로 객체에 접근할 수 있습니다. 다음 명령어로 조회해보시기 바랍니다. `User.objects.all()` 여기서 User는 각자 정의한 모델명이므로 작성자에 따라 다를 수 있습니다.
 ----
 
 ## Second Day
@@ -100,4 +100,25 @@
 
 23. signal 코드를 모두 작성했으면 profile object들을 만들어낼겁니다. 하지만 Django는 이 signal을 default로 실행하지는 않습니다. 따라서 default로 실행하도록 만들 필요가 있습니다. <b>*blog/authentication/apps.py*</b> 파일로 가서 코드를 추가해줍니다. <br><br>코드 추가가 완료되면 User object를 만들 때 Profile object가 자동으로 만들어지는 것을 확인할 수 있을 겁니다. 이 부분을 `shell`을 통해 확인해보도록 하겠습니다. 우선 <b>*blog/setting/settings.py*</b> 파일을 열고 `INSTALLED_APPS` 부분에 profiles app을 등록해주도록 하겠습니다. 다음으로 아래 과정을 따라서 확인해주시면 됩니다.<br><br>`python manage.py makemigrations`<br><br>`python manage.py migrate`<br><br>`python manage.py shell_plus` <br>여기서 shell_plus가 실행되지 않으시는 분들은 위에 언급된 django-extensions를 설치하고 오시기 바랍니다.<br><br>`>>> user = User.objects.first()`<br>`>>>user.profile`<br>`<Prfile: username>`
 
-24.
+24. 이제는 serializer를 만들도록 하겠습니다. <b>*blog/profiles/serializers.py*</b> 파일을 만들고 코드를 작성합니다. 
+
+### Rendering Profile objects
+
+25. `ProfileJSONRenderer`를 만들 차례입니다. 앞서 만들었던 `UserJSONRenderer`와 유사합니다. 그렇기 때문에 TimestampedModel을 만들었던 것처럼 이번에는 Renderer를 만들어 상속해보도록 하겠습니다. <b>*blog/core/renderers.py*</b> 파일을 만들어줍니다. 그리고 코드를 입력해줍니다.<br><br>`UserJSONRenderer`와 `BaseJSONRenderer`는 차이가 있습니다. 그 차이에 대해 설명해보도록 하겠습니다. <br><br>첫번째로 `UserJSONRenderer`에서는 `object_label`이라는 속성을 따로 명시하지는 않았습니다. 그 이유는 `UserJSONRenderer`에 대한 object label이 무엇인지 이미 알고 있었기 때문입니다.<br><br>하지만 이 경우에는 object label이 `BaseJSONRenderer`를 상속받는 대상에 따라 달라지기 때문입니다. 더 유용하게 만들기 위해서 우리는 `object_label`을 동적으로 설정되도록 허용하고 기본적으로 object 값을 사용하도록 했습니다.<br><br>두 번째로 `UserJSONRenderer`는 JWT decoding(`data['token'] = token.decode('utf-8')`)에 대해 생각해야 했습니다. 이것은 다른 Renderer에는 없는 UserJSONRenderer에만 해당되는 요구사항입니다. 이것을 사용하기 위해 `BaseJSONRenderer`에 포함해서 작성하는 것은 무의미합니다. 위 사항들을 해결하기 위해 `UserJSONRenderer`를 수정하도록 하겠습니다.
+
+26. 우선 간단하게 profiles app의 renderer를 만들기 위해 <b>*blog/profiles/api/renderers.py*</b> 파일을 열어 코드를 입력합니다. 다음으로 위 사항을 수정하기 위해 <b>*blog/authetication/api/renderers.py*</b> 파일을 열어줍니다. `BaseJSONRenderer`부분에서 처리하는 부분은 삭제하고 `UserJSONRenderer`에서 처리해야 하는 부분을 남겨줍니다. 이제 잘 작동이 되는지 postman에서 Current User를 확인해서 알아보도록 하겠습니다. 성공적으로 값을 받아옴을 확인했습니다.
+```json
+{
+    "user": {
+        "email": "client@blog.com",
+        "username": "tony",
+        "birth_date": "1992-01-01",
+        "phone_number": "010-9912-0220",
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwiZXhwIjoxNjQzMDE5MzAyfQ.mBP0-aVpEz8KiU7kIYdBIVetlfAFcZa-HFwFoB_pMck"
+    }
+}
+```
+
+## Forth day
+
+### ProfileRetrieveAPIView
