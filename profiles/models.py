@@ -1,7 +1,8 @@
 from django.db import models
+from core.models import TimestampedModel
 
-# Create your models here.
-class Profile(models.Model):
+
+class Profile(TimestampedModel):
     # 언급한 대로 Profile model과 User model은 상속관계가 있다.
     # 따라서 둘 사이에 One-To-One 관계를 만들어준다.
     # 모든 사용자들은 하나의 id에 하나의 profile을 가질 수 있다.
@@ -16,9 +17,6 @@ class Profile(models.Model):
     # 사용자의 프로필 사진을 등록할 수 있도록 한다. 등록하지 않은 경우
     # 기본 이미지가 적용되도록 설정한다.
     image = models.URLField(blank=True)
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.user.username

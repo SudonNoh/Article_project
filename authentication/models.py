@@ -6,10 +6,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 from .managers import UserManager
+from core.models import TimestampedModel
 
 
 # Create your models here.
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
     
     username = models.CharField(db_index=True, max_length=255, unique=True)
     email = models.EmailField(db_index=True, unique=True)
@@ -17,8 +18,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=20)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    create_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     
     USERNAME_FIELD = 'email'
     # 만약 superuser도 반드시 갖고 있어야 하는 정보라면

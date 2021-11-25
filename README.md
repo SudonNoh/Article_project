@@ -92,4 +92,6 @@
 
 19. 이번 단계에서는 Profile model을 만들고자 합니다. User model이 있음에도 불구하고 Profile model을 만드는 이유에 대해서 얘기해보려고 합니다. 우선 User model은 인증(authentication) 및 권한(permissions) 부여를 위한 것입니다. User model의 역할은 사용자가 접근하려는 항목에 접근할 수 있도록 하는 것입니다. 이와 대조적으로 Profile model은 사용자의 정보를 UI에 보여주는 역할을 합니다. 따라서 공개해도 되는 정보들을 Profile model에 정리해서 사용하려고 합니다.<br><br>이 과정을 위해 첫번째로 profile app을 시작해야합니다.<br>터미널에 `python manage.py startapp profiles`를 실행해줍니다. <b>*blog/profiles/models.py*</b> 파일을 열고, Profile model을 작성하도록 하겠습니다.
 
-20. 
+20. Profile model을 만들면서 한 가지 의문점이 생겼습니다. User model과 마찬가지로 `created_at`, `updated_at` field를 만들었다는 것입니다. 중복해서 두번의 코드를 작성한 것인데요. 앞으로 다른 모델을 만들어도 이 두 가지 field(`created_at`, `updated_at`)들은 계속 추가될 것입니다. <br><br>우리는 코드를 중복해서 작성하는 것을 방지하기 위해 상속을 활용하도록 하겠습니다. 위 두 가지 field를 따로 model로 만들어 관리하고, User Model과 Profile model에서 상속받아 사용하도록 합니다.<br><b>*blog/core/models.py*</b> 파일을 만들어 앞으로 중복해서 사용될 model을 미리 만들어두도록 하겠습니다.
+
+21. 그 다음 <b>*blog/profiles/models.py*</b> 파일과 <b>*blog/authentication/models.py*</b> 파일을 열어 각각 Profile model과 User model을 수정해주도록 하겠습니다.
