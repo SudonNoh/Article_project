@@ -48,6 +48,7 @@ def _handle_generic_error(exc, context, response):
     response.data = {
         'errors': response.data
     }
+    
     '''
         print('update_response: ', response)
         update_response:  <Response status_code=400, "text/html; charset=utf-8">
