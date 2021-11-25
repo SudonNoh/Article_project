@@ -95,3 +95,9 @@
 20. Profile model을 만들면서 한 가지 의문점이 생겼습니다. User model과 마찬가지로 `created_at`, `updated_at` field를 만들었다는 것입니다. 중복해서 두번의 코드를 작성한 것인데요. 앞으로 다른 모델을 만들어도 이 두 가지 field(`created_at`, `updated_at`)들은 계속 추가될 것입니다. <br><br>우리는 코드를 중복해서 작성하는 것을 방지하기 위해 상속을 활용하도록 하겠습니다. 위 두 가지 field를 따로 model로 만들어 관리하고, User Model과 Profile model에서 상속받아 사용하도록 합니다.<br><b>*blog/core/models.py*</b> 파일을 만들어 앞으로 중복해서 사용될 model을 미리 만들어두도록 하겠습니다.
 
 21. 그 다음 <b>*blog/profiles/models.py*</b> 파일과 <b>*blog/authentication/models.py*</b> 파일을 열어 각각 Profile model과 User model을 수정해주도록 하겠습니다.
+
+22. Profile model에서 우리는 User model과 Profile model 사이에 one-to-one 관계를 만들었습니다. 이것이 완벽하게 호환이 되어 User가 만들어지면 Profile이 자동으로 만들어지면 정말 좋겠지만 안타깝게도 Django에서는 User가 만들어질 때 Profile도 따로 만들어야 합니다.<br><br>우리는 이를 자동화시키기 위해 `Django's Signals framework`를 사용하도록 하겠습니다. 특히 post_save signal을 사용할 예정인데 우리는 이것을 활용해 User instance가 만들어지면 Profile instance도 자동으로 만들어지도록 만들겠습니다.<br><br>이를 위해 <b>*blog/authentication/signals.py*</b> 파일을 만들어 줍니다.
+
+23. signal 코드를 모두 작성했으면 profile object들을 만들어낼겁니다. 하지만 Django는 이 signal을 default로 실행하지는 않습니다. 따라서 default로 실행하도록 만들 필요가 있습니다. <b>*blog/authentication/apps.py*</b> 파일로 가서 코드를 추가해줍니다. <br><br>코드 추가가 완료되면 User object를 만들 때 Profile object가 자동으로 만들어지는 것을 확인할 수 있을 겁니다. 이 부분을 `shell`을 통해 확인해보도록 하겠습니다. 우선 <b>*blog/setting/settings.py*</b> 파일을 열고 `INSTALLED_APPS` 부분에 profiles app을 등록해주도록 하겠습니다. 다음으로 아래 과정을 따라서 확인해주시면 됩니다.<br><br>`python manage.py makemigrations`<br><br>`python manage.py migrate`<br><br>`python manage.py shell_plus` <br>여기서 shell_plus가 실행되지 않으시는 분들은 위에 언급된 django-extensions를 설치하고 오시기 바랍니다.<br><br>`>>> user = User.objects.first()`<br>`>>>user.profile`<br>`<Prfile: username>`
+
+24.
