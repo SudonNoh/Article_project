@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     
     'authentication',
     'profiles',
+    'articles',
     'django_extensions',
 ]
 

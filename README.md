@@ -1,6 +1,10 @@
-# Custom User
+# 목표
+1. AWS DB와 연결해서 배포
+2. social login 기능 추가
+
 ## First Day
 
+### User
 ### Creating the User model
 1. Secret Key와 settings.py 파일을 분리하기 위해 <b>*blog/secrests.json*</b>을 manage.py이 있는 project 상위 폴더에 만듭니다. Secret Key가 git에 upload할 때 포함되지 않도록 <b>*blog/.gitignore*</b> 파일에 추가해줍니다.
 
@@ -84,6 +88,7 @@
 
 18. 그 다음 <b>*blog/stting/settings.py*</b> 파일을 열어 `REST_FRAMEWORK` 부분에 `DEFAULT_AUTHENTICATION_CLASSES`를 추가해주도록 하겠습니다. 
 
+### Profile
 ### Creating the Profile model
 
 19. 이번 단계에서는 Profile model을 만들고자 합니다. User model이 있음에도 불구하고 Profile model을 만드는 이유에 대해서 얘기해보려고 합니다. 우선 User model은 인증(authentication) 및 권한(permissions) 부여를 위한 것입니다. User model의 역할은 사용자가 접근하려는 항목에 접근할 수 있도록 하는 것입니다. 이와 대조적으로 Profile model은 사용자의 정보를 UI에 보여주는 역할을 합니다. 따라서 공개해도 되는 정보들을 Profile model에 정리해서 사용하려고 합니다.<br><br>이 과정을 위해 첫번째로 profile app을 시작해야합니다.<br>터미널에 `python manage.py startapp profiles`를 실행해줍니다. <b>*blog/profiles/models.py*</b> 파일을 열고, Profile model을 작성하도록 하겠습니다.
@@ -126,3 +131,20 @@
 ### Updating UserRetrieveUpdateAPIView
 
 29. 이제 User model과 Profile model의 객체(object) 생성(create/post) 부분은 끝났습니다. 이번에는 User model의 객체를 Update 할 때, Profile model의 요소도 함께 update 할 수 있도록 `UserRetrieveUpdateAPIView`를 수정하겠습니다. <b>*blog/authentication/api/views.py*</b> 파일을 열고 코드를 수정해줍니다. 코드 작성이 완료되면 비로소 email, password, introduce 등의 update에 대한 동일한 endpoint를 갖게 됩니다. <br><br>이어서 `UserSerializer`도 수정하겠습니다. <b>*blog/authentication/api/serializers.py*</b> 파일을 열고 코드를 수정해줍니다.
+
+### Articles
+
+지금까지 User model, Profile model에 대한 post, get, update 기능을 만들어보았습니다. 이제 client들은 자신들의 id를 만들고, log in 하고, 다른 사용자들의 profile도 볼 수 있는 상태가 되었습니다. 이번 파트에서부터는 posting system을 만들어 보도록 하겠습니다. 인증받은 사용자들은 글을 쓰고 다른 유저들은 그 글을 읽을 수 있습니다.
+
+### Creating the Article model
+
+30. 먼저 앞에서부터 꾸준히 해왔던 것처럼 model을 먼저 구성해보도록 하겠습니다. <b>*blog/articles/models.py*</b> 파일을 만들고 코드를 입력합니다. 이제 <b>*blog/setting/settings.py*</b> 파일에 articles app을 추가해준 뒤, migration을 진행해줍니다.<br><br>`python manage.py makemigrations`<br>`python manage.py migrate`
+
+31. Serializer를 만들도록 하겠습니다. <b>*blog/articles/api/serializers.py*</b> 파일을 만들고 코드를 입력합니다. 다음으로 <b>*blog/articles/api/renderers.py*</b> 파일을 추가로 만들어줍니다.
+
+32. 이어서 View를 만들도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 만들어 view 코드를 작성하겠습니다. <br><br>GenericViewSet 클래스는 GenericAPIView를 상속하고, get_object, get_queryset meothod들을 기본 set으로 제공하고 다른 generic view의 기본 행동을 제공합니다. 하지만 어떤 action도 default 값으로 제공되지 않고 있습니다.<br><br>따라서 GenericViewSet 클래스를 사용하기 위해 사용자는 해당 클래스를 override하고 request 받은 mixin 클래스를 override하거나 명식적으로 action을 구현해야 합니다.
+
+33. url을 연결시키기 위해 <b>*blog/articles/api/urls.py*</b> 파일을 만들어 코드를 입력하겠습니다. 여기에서 router를 사용할 예정입니다. 다음으로 <b>*blog/setting/urls.py*</b> 파일을 열어 articles app과 연결하는 코드를 입력해줍니다.
+
+
+34. 
