@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 from authentication.models import User
+from profiles.api.serializers import ProfileSerializer
 
 
 
@@ -88,6 +89,15 @@ class UserSerializer(serializers.ModelSerializer):
         write_only=True
     )
     
+    # 해당 serializer로 profile field를 처리할 때, 'UserSerializer'는 절대 'Profile
+    # information'을 노출해서는 안됩니다. 그렇기 때문에 'write_only=True'로 설정해야
+    # 합니다.
+    profile = ProfileSerializer(write_only=True)
+    
+    # 'introduce' 와 'image' field를 profile model로부터 얻어오도록 하겠습니다.
+    introduce = serializers.CharField(source='profile.introduce', read_only=True)
+    image = serializers.CharField(source='profile.image', read_only=True)
+    
     class Meta:
         model = User
         fields = [
@@ -96,7 +106,10 @@ class UserSerializer(serializers.ModelSerializer):
             'password', 
             'birth_date', 
             'phone_number', 
-            'token'
+            # 'token',
+            'profile',
+            'introduce',
+            'image'
         ]
         
         # 'read_only_fields' 옵션은 각 field에 'read_only=True'와 같은 역할을 한다.
@@ -109,7 +122,7 @@ class UserSerializer(serializers.ModelSerializer):
         # 입력을 받을 때, 'max_length', 'min_length' 프로퍼티(property)를 지정해야 했기 
         # 때문이다. token field에 대해서는 그럴 이유가 없기 때문에 'read_only_fields'로
         # 따로 작성했다.
-        read_only_fields = ('token',)
+        # read_only_fields = ('token',)
         
     def update(self, instance, validated_data):
         """Performs an update on a User."""
@@ -130,6 +143,11 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data:   {'birth_date': datetime.date(1992, 1, 1), 'phone_number': '010-1234-1234'}
         '''
         
+        # password와 마찬가지로 profile 부분을 따로 분리해서 처리해야 한다.
+        # 따라서 validated_data에서 profile 부분을 제거하고, 제거된 데이터를
+        # profile_data로 따로 담아둔다.
+        profile_data = validated_data.pop('profile', {})
+        
         for (key, value) in validated_data.items():
             # password를 제외한 key들은 계속 남겨두고, value 값만 현재 'User'의 
             # instance로 바꿔주도록 한다.
@@ -147,5 +165,12 @@ class UserSerializer(serializers.ModelSerializer):
         # 이제 수정된 instance를 DB에 저장이 되도록 save해준다. 
         # 'set_password()'가 model에 저장하는 기능을 하지는 않습니다.
         instance.save()
+        
+        for (key, value) in profile_data.items():
+            # 위의 User 값을 저장한 것과 마찬가지로 Profile 값을 저장한다.
+            setattr(instance.profile, key, value)
+        
+        # 변경된 사항을 profile model에 저장한다.
+        instance.profile.save()
         
         return instance

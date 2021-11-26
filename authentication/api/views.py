@@ -50,7 +50,19 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def patch(self, request, *args, **kwargs):
-        serializer_data = request.data
+        user_data = request.data
+        
+        serializer_data = {
+            'username': user_data.get('username', request.user.username),
+            'email': user_data.get('email', request.user.email),
+            'birth_date': user_data.get('birth_date', request.user.birth_date),
+            'phone_number': user_data.get('phone_number', request.user.phone_number),
+            
+            'profile': {
+                'introduce': user_data.get('introduce', request.user.profile.introduce),
+                'image': user_data.get('image', request.user.profile.image)
+            }
+        }
         
         # 이곳에 serialize, validate, save pattern등 전에 얘기했던 기능들을 추가합니다.
         # 여기서 partial 옵션은 부분적으로 업데이트가 가능하도록 하는 기능입니다.

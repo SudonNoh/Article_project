@@ -122,3 +122,7 @@
 27. 이번 파트에서는 `ProfileRetriveAPIView`를 만들어보도록 하겠습니다. <b>*blog/profiles/api/views.py*</b> 파일을 만들고 코드를 입력합니다. 이번 코드에서 request 받은 profile이 존재하지 않을 경우, `Profile.DoesNotExist` 이 나타나도록 했습니다. 하지만 client가 `Profile.DoesNotExist`를 응답으로 받았을 때, 확인할 수 있는 메세지가 명확하게 나와있지 않습니다. 이것을 해결하기 위해서 <b>*blog/profiles/api/exceptions.py*</b> 파일을 만들어 코드를 작성해보겠습니다.<br><br>`exceptions.py` 파일 작성이 끝나면 이제 이것을 <b>*blog/core/exceptions.py*</b> 파일의 `core_exception_handler` 부분에 추가해주어야 합니다. 또 이렇게 추가된 `ProfileDoesNotExist` exception을 <b>*blog/profiles/api/views.py*</b>에 추가해주어야 합니다. 
 
 28. 이제 해당 `ProfileRetriveAPIView`를 url에 입력해주어야 합니다. <b>*blog/profiles/api/urls.py*</b> 파일을 만들고 코드를 입력합니다. 그 다음으로 <b>*blog/setting/urls.py*</b> 파일을 열고 url을 연결하는 코드를 입력합니다. 이번 url에서는 username을 parameter로 보냅니다. 이것을 받아 view에서 검색 후 serializer를 거쳐 데이터로 반환합니다.
+
+### Updating UserRetrieveUpdateAPIView
+
+29. 이제 User model과 Profile model의 객체(object) 생성(create/post) 부분은 끝났습니다. 이번에는 User model의 객체를 Update 할 때, Profile model의 요소도 함께 update 할 수 있도록 `UserRetrieveUpdateAPIView`를 수정하겠습니다. <b>*blog/authentication/api/views.py*</b> 파일을 열고 코드를 수정해줍니다. 코드 작성이 완료되면 비로소 email, password, introduce 등의 update에 대한 동일한 endpoint를 갖게 됩니다. <br><br>이어서 `UserSerializer`도 수정하겠습니다. <b>*blog/authentication/api/serializers.py*</b> 파일을 열고 코드를 수정해줍니다.
