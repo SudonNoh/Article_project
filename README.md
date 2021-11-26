@@ -146,5 +146,11 @@
 
 33. url을 연결시키기 위해 <b>*blog/articles/api/urls.py*</b> 파일을 만들어 코드를 입력하겠습니다. 여기에서 router를 사용할 예정입니다. 다음으로 <b>*blog/setting/urls.py*</b> 파일을 열어 articles app과 연결하는 코드를 입력해줍니다.
 
+### Slugifying article titles
 
-34. 
+34. 우리가 만들고 있는 사이트 같은 경우에 여러 사용자들이 같은 title을 사용해 article을 작성하는 경우를 고려해야 합니다. 우리는 title의 문자열을 소문자로 변경하고, 문자열의 공백(space)을 hyphen으로 변경해주고 몇가지 과정을 통해 사용자들이 이전에 포스팅한 제목과 같은 제목을 쓰지 않도록 할 수 있습니다. 여기서 만들어진 것은 slug에 담기는데, 우리는 models.py에서 이 slug를 unique하다고 정의했었습니다. 이 과정을 <b>*blog/core/utils.py*</b> 파일을 만들어 코드로 입력해주었습니다.<br><br>우리는 여기서 만든 signal을 객체가 저장되기 전에 실행해 자동으로 슬러그를 설정해야 합니다. 그렇게 하려면 우선적으로 signal 기능을 만들어주어야 합니다.
+
+35. 다음 경로의 파일을 만들어줍니다. <b>*blog/articles/signals.py*</b> 만들어진 파일에 코드를 입력하겠습니다. signals.py 작성이 완료되면 <b>*blog/articles/apps.py*</b> 파일을 만들어 custom app을 등록해주어야 합니다.<br><br>다음 과정까지 완료되면 Postman에서 "Create Article"을 실행해보도록 하세요.
+
+
+### Listsing and retrieving articles
