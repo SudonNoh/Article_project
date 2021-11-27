@@ -152,5 +152,11 @@
 
 35. 다음 경로의 파일을 만들어줍니다. <b>*blog/articles/signals.py*</b> 만들어진 파일에 코드를 입력하겠습니다. signals.py 작성이 완료되면 <b>*blog/articles/apps.py*</b> 파일을 만들어 custom app을 등록해주어야 합니다.<br><br>다음 과정까지 완료되면 Postman에서 "Create Article"을 실행해보도록 하세요.
 
-
+## Fifth day
 ### Listsing and retrieving articles
+
+36. 이제 전체 article을 보여주는 list와 slug field를 이용해 하나의 article을 찾는 retrieve 기능을 만들어보도록 하겠습니다. 우선 이 기능들은 간단한 설정만으로 확인이 가능합니다. 먼저 <b>*blog/articles/api/views.py*</b> 파일을 열고, `ArticleViewSet`에 mixin을 상속받습니다. `mixins.ListModelMixin`, `mixins.RetrieveModelMixin` 을 추가해준 뒤에 바로 아래에 `lookup_field = 'slug'`를 추가해줍니다.
+
+37. 이제 postman에서 실행해보도록 하겠습니다. postman에서 실행했을 때 slug를 이용해 찾는 기능은 정상적으로 동작합니다. 하지만 모든 articles를 보는 기능은 다음과 같은 오류를 반환합니다.<br>`AttributeError: 'ReturnList' object has no attribute 'get'`<br>지금까지 우리는 BaseJSONRenderer가 dictionary 형태로만 인수를 받을 거라고 생가하고 코드를 작성했습니다. 하지만 object들의 list를 rendering하는 경우에는 `BaseJSONRenderer`가 유효한 인수를 받지 못합니다. list를 rendering 할 때, `data`는 `ReturnList`의 instance입니다. 우리는 이 경우를 다루어야 합니다.
+
+38. 37번에서 발생한 오류를 수정하기 위해 <b>*blog/core/renderers.py*</b> 파일을 열고 코드를 수정해주겠습니다.

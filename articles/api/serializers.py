@@ -18,16 +18,15 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = [
             'author',
             'body',
-            'createdAt',
             'description',
             'slug',
             'title',
+            'createdAt',
             'updatedAt',
         ]
         
     def create(self, validated_data):
         author = self.context.get('author', None)
-        
         return Article.objects.create(author=author, **validated_data)
     
     def get_created_at(self, instance):

@@ -10,9 +10,12 @@ from . serializers import ArticleSerializer
 
 class ArticleViewSet(
     mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
     ):
     
+    lookup_field = 'slug'
     queryset = Article.objects.select_related('author', 'author__user')
     permission_classes = (IsAuthenticatedOrReadOnly,)
     renderer_classes = (ArticleJSONRenderer,)
@@ -20,8 +23,7 @@ class ArticleViewSet(
     
     def create(self, request):
         serializer_context = {'author': request.user.profile}
-        serializer_data = request.data.get('article', {})
-
+        serializer_data = request.data
         serializer = self.serializer_class(
             data=serializer_data, context=serializer_context
         )
