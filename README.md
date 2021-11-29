@@ -173,3 +173,16 @@
 
 42. 이번에 postman에서 current user의 username을 잘못보내서 error 메세지를 확인해보도록 하겠습니다. 추가로 사용하는데 필요없어진 <b>*blog/profiles/api/exceptions.py*</b> 파일을 삭제하고, ProfileDoesNotExist를 제거하도록 하겠습니다. 잘 작동하는지 postman을 활용해 확인해보시기 바랍니다.
 
+43. 마지막으로 <b>*blog/articles/api/views.py*</b>에 retrieve 기능을 추가해주도록 하겠습니다.
+
+### Comments
+
+이번에는 각 articles에 comment를 달고, 삭제할 수 있도록 만들어보겠습니다.
+
+### Creating the Comment model
+
+44. 먼저 최우선으로 model을 만들도록 하겠습니다. <b>*blog/articles/models.py*</b> 파일을 열고, 코드를 작성해 `Comment` model을 만들도록 하겠습니다. `Comment` model은 앞서 만들었던 model들보다 훨씬 간단합니다. `body`라는 textfield만 있으면 됩니다.
+
+45. 다음으로 Serializer을 만들도록 하겠습니다. <b>*blog/articles/api/serializers.py*</b> 파일을 열고 코드를 작성하도록 하겠습니다. 코드 작성이 완료되면 간단하고 comment에 대한 renderer를 만들겠습니다. <b>*blog/articles/api/renderers.py*</b> 파일을 열고 코드를 작성합니다.
+
+46. 다음 과정으로 comment에 대한 view를 만들어주도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 입력하겠습니다. comment를 create, update, list, destroy 하는 기능을 추가하겠습니다.

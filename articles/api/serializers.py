@@ -1,8 +1,9 @@
 from rest_framework import serializers
+from rest_framework.utils import serializer_helpers
 
 from profiles.api.serializers import ProfileSerializer
 
-from articles.models import Article
+from articles.models import Article, Comment
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -36,3 +37,25 @@ class ArticleSerializer(serializers.ModelSerializer):
     
     def get_updated_at(self, instance):
         return instance.updated_at.isoformat()
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = ProfileSerializer(required=False)
+    
+    createAt = serializers.SerializerMethodField(method_name='get_created_at')
+    updateAt = serializers.SerializerMethodField(method_name='get_updated_at')
+    
+    class Meta:
+        model = Comment
+        fields = [
+            'author',
+            'body',
+            'createAt',
+            'updateAt'
+        ]
+        
+    def get_created_at(self, instance):
+        return instance.created_at.isoformat()
+    
+    def get_updated_at(self, instance):
+        return instance.updated_at.isoformnat()
