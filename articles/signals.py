@@ -21,7 +21,7 @@ def add_slug_to_article_if_not_exists(sender, instance, *args, **kwargs):
         while len(slug + '-' + unique) > MAXIMUM_SLUG_LENGTH:
             parts = slug.split('-')
             
-            if len(parts) is 1:
+            if len(parts) == 1:
                 # 만약에 slug가 hyphen을 갖고있지 않은 경우 추가 unique 문자열을
                 # 추가하고, hyphen을 넣기 위해 끝에 unique자리와 hyphen 자리 1을
                 # 제거합니다.

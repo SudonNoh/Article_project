@@ -159,4 +159,12 @@
 
 37. 이제 postman에서 실행해보도록 하겠습니다. postman에서 실행했을 때 slug를 이용해 찾는 기능은 정상적으로 동작합니다. 하지만 모든 articles를 보는 기능은 다음과 같은 오류를 반환합니다.<br>`AttributeError: 'ReturnList' object has no attribute 'get'`<br>지금까지 우리는 BaseJSONRenderer가 dictionary 형태로만 인수를 받을 거라고 생가하고 코드를 작성했습니다. 하지만 object들의 list를 rendering하는 경우에는 `BaseJSONRenderer`가 유효한 인수를 받지 못합니다. list를 rendering 할 때, `data`는 `ReturnList`의 instance입니다. 우리는 이 경우를 다루어야 합니다.
 
-38. 37번에서 발생한 오류를 수정하기 위해 <b>*blog/core/renderers.py*</b> 파일을 열고 코드를 수정해주겠습니다.
+38. 37번에서 발생한 오류를 수정하기 위해 <b>*blog/core/renderers.py*</b> 파일을 열고 코드를 수정해주겠습니다.<br><br>1. 기존 key를 if문의 else 부분으로 들여쓰기 합니다.<br>2. 새로운 property("object_label_plural)를 추가합니다. list를 rendering 할 때, 우리는 한 개의 객체만을 받을 때는 "user", list를 받을 떄는 "users"로 받을 예정입니다.<br>3. 객체들의 list를 기본 JSONRenderer에 위임합니다.
+
+## Sixth day
+
+39. test하기 전에 추가된 객체 `object_label_plural`을 <b>*blog/articles/api/renderers.py*</b> 파일에 추가해줍니다. 그 다음에 postman을 열고, 모든 "Articles"를 검색해보도록 하겠습니다.
+
+### Updating an article
+
+40. 지금까지 article에 대한 creat, list, retrieve 기능을 만들었다. 이번에는 update하는 방법에 대해 알아보도록 하겠습니다.
