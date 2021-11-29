@@ -1,5 +1,6 @@
+from functools import partial
 from rest_framework import mixins, status, viewsets
-from rest_framework.decorators import renderer_classes
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
@@ -31,3 +32,20 @@ class ArticleViewSet(
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def update(self, request, slug):
+        try:
+            serializer_instance = self.queryset.get(slug=slug)
+        except Article.DoesNotExist:
+            raise NotFound('An article with this slug does not exist.')
+        
+        serializer_data = request.data
+        
+        serializer = self.serializer_class(
+            serializer_instance, data=serializer_data, partial=True
+        )
+        
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)

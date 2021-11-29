@@ -167,4 +167,9 @@
 
 ### Updating an article
 
-40. 지금까지 article에 대한 creat, list, retrieve 기능을 만들었다. 이번에는 update하는 방법에 대해 알아보도록 하겠습니다.
+40. 지금까지 article에 대한 creat, list, retrieve 기능을 만들었다. 이번에는 update하는 방법에 대해 알아보도록 하겠습니다. 다시 <b>*blog/articles/api/views.py*</b> 파일을 열고, 코드를 입력해줍니다.<br><br>먼저 우리는 앞서 만들었던 retrieve에서 객체가 존재하지 않는 경우 발생하는 error를 따로 처리하지는 않았습니다. 이번에 retrieve 할 때 객체가 존재하지 않는 경우, update할 때 객체가 존재하지 않는 경우를 처리해보도록 하겠습니다.<br><br> 그 전에 우선 postman에서 update를 해보도록 하겠습니다.
+
+41. postman에서 확인이 끝났으면 이제 우리는 새로운 유형의 exception error을 만들어야 합니다. <b>*blog/core/exceptions.py*</b> 파일을 열고 코드를 추가합니다.<br><br>여기서 한 가지 중요한 포인트는 `_handle_not_found_error`가 작동하려면 view가 queryset을 명시해야 한다는 겁니다. 우리는 이미 이전에 작업을 끝냈기 때문에 여기에서는 신경 쓸 필요가 없습니다.<br><br>이제 postman에서 활용해보도록 하겠습니다. 이전에는 "article"로 나오던 값이 "errors"로 변경된 것을 알 수 있습니다.<br><br>보편적으로 사용할 수 있는 `NotFound` error를 만들었기 때문에 이제 `ProfileNotFoundError`에 있는 부분도 `NotFound`로 변경해보도록 하겠습니다. <b>*blog/profiles/api/views.py*</b> 파일을 열고 코드를 작성해보도록 하겠습니다.
+
+42. 이번에 postman에서 current user의 username을 잘못보내서 error 메세지를 확인해보도록 하겠습니다. 추가로 사용하는데 필요없어진 <b>*blog/profiles/api/exceptions.py*</b> 파일을 삭제하고, ProfileDoesNotExist를 제거하도록 하겠습니다. 잘 작동하는지 postman을 활용해 확인해보시기 바랍니다.
+
