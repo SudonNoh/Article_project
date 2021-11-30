@@ -185,4 +185,6 @@
 
 45. 다음으로 Serializer을 만들도록 하겠습니다. <b>*blog/articles/api/serializers.py*</b> 파일을 열고 코드를 작성하도록 하겠습니다. 코드 작성이 완료되면 간단하고 comment에 대한 renderer를 만들겠습니다. <b>*blog/articles/api/renderers.py*</b> 파일을 열고 코드를 작성합니다.
 
-46. 다음 과정으로 comment에 대한 view를 만들어주도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 입력하겠습니다. comment를 create, update, list, destroy 하는 기능을 추가하겠습니다.
+46. 다음 과정으로 comment에 대한 view를 만들어주도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 입력하겠습니다. comment를 create, list 하는 기능을 추가하겠습니다. 기능을 만든 후에는 Postman에서 확인해보도록 하겠습니다.
+
+47. update와 delete 기능을 만드는 중입니다. 이 중 permission 관련 문제를 해결해야 합니다.

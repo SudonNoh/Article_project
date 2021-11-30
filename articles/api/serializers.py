@@ -20,6 +20,7 @@ class ArticleSerializer(serializers.ModelSerializer):
             'author',
             'body',
             'description',
+            'id',
             'slug',
             'title',
             'createdAt',
@@ -48,14 +49,23 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = [
+            'id',
             'author',
             'body',
             'createAt',
             'updateAt'
         ]
         
+    def create(self, validated_data):
+        article = self.context['article']
+        author = self.context['author']
+        
+        return Comment.objects.create(
+            author=author, article=article, **validated_data
+        )
+        
     def get_created_at(self, instance):
         return instance.created_at.isoformat()
     
     def get_updated_at(self, instance):
-        return instance.updated_at.isoformnat()
+        return instance.updated_at.isoformat()
