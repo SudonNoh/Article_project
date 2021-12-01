@@ -187,4 +187,5 @@
 
 46. 다음 과정으로 comment에 대한 view를 만들어주도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 입력하겠습니다. comment를 create, list 하는 기능을 추가하겠습니다. 기능을 만든 후에는 Postman에서 확인해보도록 하겠습니다.
 
-47. update와 delete 기능을 만드는 중입니다. 이 중 permission 관련 문제를 해결해야 합니다.
+47. 다음으로 comment를 삭제하는 기능과 수정하는 기능을 만들어주도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 작성합니다. 이번에는 comment 수정하는 기능을 작성자만 가능하도록 하고, 작성자가 아닐 경우 접근하지 못하도록 만들어보겠습니다. <b>*blog/core/permissions.py*</b> 파일을 만들고 custom Permission을 만들도록 하겠습니다. 만들어진 permission을 views.py 파일에 적용시켜보도록 하겠습니다.
+

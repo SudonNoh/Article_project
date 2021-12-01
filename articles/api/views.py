@@ -121,21 +121,23 @@ class CommentsDestroyAPIView(generics.DestroyAPIView):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 class CommentUpdateAPIView(generics.UpdateAPIView):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    lookup_url_kwarg = 'comment_pk'
+    permission_classes = (IsOwnerOnly,)
     renderer_classes = (CommentJSONRenderer,)
     serializer_class = CommentSerializer
     
-    def patch(self, request, article_slug=None, comment_pk=None):
+    def get_object(self):
         try:
-            comment = Comment.objects.get(pk=comment_pk)
+            comment = Comment.objects.get(pk=self.kwargs[self.lookup_url_kwarg])
+            self.check_object_permissions(self.request, comment)
+            return comment
         except Comment.DoesNotExist:
             raise NotFound('A comment with this Id does not exist.')
-            
+        
+    def patch(self, request, article_slug=None, comment_pk=None):
+        comment = self.get_object()
         data = request.data
-        print(request.user.is_staff)
-        print('1 . ', comment.author.user.email)
-        print('2 . ', request.user)
-
+        
         serializer = self.serializer_class(
             comment, data=data, partial=True
         )
