@@ -137,7 +137,7 @@ class CommentUpdateAPIView(generics.UpdateAPIView):
     def patch(self, request, article_slug=None, comment_pk=None):
         comment = self.get_object()
         data = request.data
-        
+
         serializer = self.serializer_class(
             comment, data=data, partial=True
         )

@@ -2,7 +2,6 @@
 1. AWS DB와 연결해서 배포
 2. social login 기능 추가
 
-## First Day
 
 ### User
 ### Creating the User model
@@ -22,8 +21,6 @@
 >django shell에서 model들을 한번에 import 하고 사용하기 위해서 extensions를 설치해줄 필요가 있습니다.<br> `pip install django-extensions` 으로 설치하고 터미널에<br>`python manage.py shell_plus`를 입력해주면 django와 관련된 모듈들이 import 되는 것을 확인할 수 있습니다.<br><br>이제 본인이 정의한 모델명으로 객체에 접근할 수 있습니다. 다음 명령어로 조회해보시기 바랍니다. `User.objects.all()` 여기서 User는 각자 정의한 모델명이므로 작성자에 따라 다를 수 있습니다.
 ----
 
-## Second Day
-
 5. superuser를 만들어 테스트가 끝나면 인증 부분을 수정해보도록 하겠습니다. 먼저 <b>*blog/authentication/models.py*</b> 파일에 `@property`를 추가해 token을 만들기 위한 함수를 정의해줍니다. 제대로 적용이 되었는지 확인해봅니다. 위에서 언급한 `shell_plus`로 shell을 열고, `User.objects.first().token`으로 token이 잘 나오는지 확인합니다.
 ----
 >pyjwt의 버전이 1.7.1 이하이면 decode를 적용시켜야 합니다. return 부분에 token.decode('utf-8')을 작성해줍니다. 
@@ -42,7 +39,6 @@
 
 11. 이번엔 View를 수정해보도록 하겠습니다. <b>*blog/authentication/api/views.py*</b> 파일을 열어 `LoginAPIView`를 추가해줍니다. 추가한 후 <b>*blog/authentication/api/urls.py*</b> 파일을 열어 url을 설정합니다. 이후 postman에서 login이 정상적으로 이루어지는지 확인해봅니다. <br><br>이 과정에서 post가 정상적으로 이루어지지 않는 경우 "non_field_errors" 라는 오류를 반환합니다. 여기에는 한 가지 문제가 있는데요.<br><br> 일반적으로 이 오류는 serializer가 유효성 검사를 실패하게 만든 모든 필드에 해당됩니다. 즉, 포괄적인 전체 error를 보여줄 때 설정됩니다. 우리가 만든 validator의 경우 validate_email과 같은 필드별 method 대신에 validate method 자체를 override했기 때문에 DRF는 오류에서 반환할 필드를 알지 못하기 때문에 특정 field error를 반환하지 못하고, "non_field_errors"를 반환한 것 입니다.<br><br> client는 보여지는 error(여기서는 "non_field_errors")를 사용해 표시하기 때문에 저는 간단하게 "non_field_errors"를 "error"로 변경하도록 하겠습니다. <br><br> 이 문제를 해결하기 위해 기본 error 처리를 override하도록 하겠습니다.
 
-## Third day
 ### Overriding EXCEPTION_HANDLER and NON_FIELD_ERRORS_KEY
 
 12. DRF setting 중 하나가 EXCEPTION_HANDLER입니다. 기본 exception handler는 단순하게 오류 dictionary를 반환합니다. 저는 EXCEPTION_HANDLER를 override 하고, NON_FIELD_ERRORS_KEY를 앞서 언급한대로 override하도록 하겠습니다.<br><br> 우선 <b>*blog/core*</b> 라는 폴더를 만들고 그 안에 <b>*blog/core/exceptions.py*</b> 파일을 만들어 줍니다.
@@ -120,8 +116,6 @@
 }
 ```
 
-## Forth day
-
 ### ProfileRetrieveAPIView
 
 27. 이번 파트에서는 `ProfileRetriveAPIView`를 만들어보도록 하겠습니다. <b>*blog/profiles/api/views.py*</b> 파일을 만들고 코드를 입력합니다. 이번 코드에서 request 받은 profile이 존재하지 않을 경우, `Profile.DoesNotExist` 이 나타나도록 했습니다. 하지만 client가 `Profile.DoesNotExist`를 응답으로 받았을 때, 확인할 수 있는 메세지가 명확하게 나와있지 않습니다. 이것을 해결하기 위해서 <b>*blog/profiles/api/exceptions.py*</b> 파일을 만들어 코드를 작성해보겠습니다.<br><br>`exceptions.py` 파일 작성이 끝나면 이제 이것을 <b>*blog/core/exceptions.py*</b> 파일의 `core_exception_handler` 부분에 추가해주어야 합니다. 또 이렇게 추가된 `ProfileDoesNotExist` exception을 <b>*blog/profiles/api/views.py*</b>에 추가해주어야 합니다. 
@@ -152,7 +146,6 @@
 
 35. 다음 경로의 파일을 만들어줍니다. <b>*blog/articles/signals.py*</b> 만들어진 파일에 코드를 입력하겠습니다. signals.py 작성이 완료되면 <b>*blog/articles/apps.py*</b> 파일을 만들어 custom app을 등록해주어야 합니다.<br><br>다음 과정까지 완료되면 Postman에서 "Create Article"을 실행해보도록 하세요.
 
-## Fifth day
 ### Listsing and retrieving articles
 
 36. 이제 전체 article을 보여주는 list와 slug field를 이용해 하나의 article을 찾는 retrieve 기능을 만들어보도록 하겠습니다. 우선 이 기능들은 간단한 설정만으로 확인이 가능합니다. 먼저 <b>*blog/articles/api/views.py*</b> 파일을 열고, `ArticleViewSet`에 mixin을 상속받습니다. `mixins.ListModelMixin`, `mixins.RetrieveModelMixin` 을 추가해준 뒤에 바로 아래에 `lookup_field = 'slug'`를 추가해줍니다.
@@ -160,8 +153,6 @@
 37. 이제 postman에서 실행해보도록 하겠습니다. postman에서 실행했을 때 slug를 이용해 찾는 기능은 정상적으로 동작합니다. 하지만 모든 articles를 보는 기능은 다음과 같은 오류를 반환합니다.<br>`AttributeError: 'ReturnList' object has no attribute 'get'`<br>지금까지 우리는 BaseJSONRenderer가 dictionary 형태로만 인수를 받을 거라고 생가하고 코드를 작성했습니다. 하지만 object들의 list를 rendering하는 경우에는 `BaseJSONRenderer`가 유효한 인수를 받지 못합니다. list를 rendering 할 때, `data`는 `ReturnList`의 instance입니다. 우리는 이 경우를 다루어야 합니다.
 
 38. 37번에서 발생한 오류를 수정하기 위해 <b>*blog/core/renderers.py*</b> 파일을 열고 코드를 수정해주겠습니다.<br><br>1. 기존 key를 if문의 else 부분으로 들여쓰기 합니다.<br>2. 새로운 property("object_label_plural)를 추가합니다. list를 rendering 할 때, 우리는 한 개의 객체만을 받을 때는 "user", list를 받을 떄는 "users"로 받을 예정입니다.<br>3. 객체들의 list를 기본 JSONRenderer에 위임합니다.
-
-## Sixth day
 
 39. test하기 전에 추가된 객체 `object_label_plural`을 <b>*blog/articles/api/renderers.py*</b> 파일에 추가해줍니다. 그 다음에 postman을 열고, 모든 "Articles"를 검색해보도록 하겠습니다.
 
@@ -189,3 +180,8 @@
 
 47. 다음으로 comment를 삭제하는 기능과 수정하는 기능을 만들어주도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 작성합니다. 이번에는 comment 수정하는 기능을 작성자만 가능하도록 하고, 작성자가 아닐 경우 접근하지 못하도록 만들어보겠습니다. <b>*blog/core/permissions.py*</b> 파일을 만들고 custom Permission을 만들도록 하겠습니다. 만들어진 permission을 views.py 파일에 적용시켜보도록 하겠습니다.
 
+### Following
+이번 파트에서는 다른 사람을 follow 하는 기능을 만들어보려고 합니다. 양방향의 동의를 갖고 맺어지는 관계가 아닌 한 방향(one-way) 형태의 following 기능을 만들겠습니다.
+### Creating the Following relationship
+
+48. follow 기능을 추가하기 위해 <b>*blog/profiles/models.py*</b> 파일을 만들고 `Profile` model에 몇 가지 코드를 추가하도록 하겠습니다. 

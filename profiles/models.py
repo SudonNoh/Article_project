@@ -18,5 +18,12 @@ class Profile(TimestampedModel):
     # 기본 이미지가 적용되도록 설정한다.
     image = models.URLField(blank=True)
     
+    # 
+    follows = models.ManyToManyField(
+        'self',
+        related_name='followed_by',
+        symmetrical=False
+    )
+    
     def __str__(self):
         return self.user.username
