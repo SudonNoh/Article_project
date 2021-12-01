@@ -23,13 +23,22 @@ class Profile(TimestampedModel):
     # 다른 한쪽이 반드시 follow했다고 볼 수 없다. 이것은 symmetrical=False로 확인할 
     # 수 있다.
     follows = models.ManyToManyField(
+        # 여기는 연결되는 model을 추가하는 자리인데, profile model은 
+        # profile model과 many-to-many 관계이기 때문에 self를 작성해 준 것
         'self',
         related_name='followed_by',
         symmetrical=False
     )
     
+    favorites = models.ManyToManyField(
+        'articles.Article',
+        related_name='favorated_by'
+    )
+    
     def __str__(self):
         return self.user.username
+    
+    # follow method
     
     def follow(self, profile):
         """Follow 'profile' if we're not already following 'profile'."""
@@ -53,3 +62,5 @@ class Profile(TimestampedModel):
         """
         # related_name = 'followed_by'
         return self.followed_by.filter(pk=profile.pk).exists()
+    
+    # favorite method

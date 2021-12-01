@@ -1,6 +1,7 @@
 # 목표
-1. AWS DB와 연결해서 배포
-2. social login 기능 추가
+1. follow list 목록 만들어보기
+2. AWS DB와 연결해서 배포
+3. social login 기능 추가
 
 
 ### User
@@ -195,3 +196,11 @@
 ### Creating views for Following and Unfollowing
 
 51. 이제 본격적으로 follow 기능과 unfollow 기능을 다룰 view를 만들어보도록 하겠습니다. `ProfileFollowAPIView`를 만들고, unfollow를 위한 `delete`, follow를 위한 `post` 기능을 만들도록 하겠습니다.
+
+### Favoriting
+
+이번 파트에서는 `북마크` 또는 `좋아요` 기능을 만들어보도록 하겠습니다. 다른 user들의 article을 `좋아요` 눌러놓으면 나중에 찾기 쉽도록 하기 위함입니다. 우린 article에 대한 `좋아요` 기능을 profile model과 article serializer에 추가해 article `좋아요`, `좋아요 취소` 기능을 추가하도록 하겠습니다.
+
+### Updating the Profile model
+
+52. 우리는 `Profile` 과 `Article` 사이에 앞서 follow기능을 만들었던 것과 같이 몇가지 utility를 추가해 `many-to-many` 관계를 추가하도록 하겠습니다. <b>*blog/profiles/models.py*</b> 파일을 열고 코드를 추가하도록 하겠습니다.
