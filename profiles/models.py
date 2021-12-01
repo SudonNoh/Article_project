@@ -18,7 +18,10 @@ class Profile(TimestampedModel):
     # 기본 이미지가 적용되도록 설정한다.
     image = models.URLField(blank=True)
     
-    # 
+    # 관계의 양쪽이 동일한 model인 Many-To-Many 관계의 예시이다. 이 예시에서 model은
+    # 'profile'이다. 본문에서 언급했듯 이 관계는 단방향이다. 한쪽에 follow 했다고 해서
+    # 다른 한쪽이 반드시 follow했다고 볼 수 없다. 이것은 symmetrical=False로 확인할 
+    # 수 있다.
     follows = models.ManyToManyField(
         'self',
         related_name='followed_by',
@@ -27,3 +30,26 @@ class Profile(TimestampedModel):
     
     def __str__(self):
         return self.user.username
+    
+    def follow(self, profile):
+        """Follow 'profile' if we're not already following 'profile'."""
+        self.follows.add(profile)
+        
+    def unfollow(self, profile):
+        """Unfollow 'profile' if we're already following 'profile'."""
+        self.follows.remove(profile)
+        
+    def is_following(self, profile):
+        """
+        Returns True if we're following 'profile'; False otherwise.
+        "Am I following this person?"
+        """
+        return self.follows.filter(pk=profile.pk).exists()
+
+    def is_followed_by(self, profile):
+        """
+        Returns True if 'profile' is following us; False otherwise.
+        "Is this person following me?"
+        """
+        # related_name = 'followed_by'
+        return self.followed_by.filter(pk=profile.pk).exists()

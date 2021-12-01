@@ -184,4 +184,14 @@
 이번 파트에서는 다른 사람을 follow 하는 기능을 만들어보려고 합니다. 양방향의 동의를 갖고 맺어지는 관계가 아닌 한 방향(one-way) 형태의 following 기능을 만들겠습니다.
 ### Creating the Following relationship
 
-48. follow 기능을 추가하기 위해 <b>*blog/profiles/models.py*</b> 파일을 만들고 `Profile` model에 몇 가지 코드를 추가하도록 하겠습니다. 
+48. follow 기능을 추가하기 위해 <b>*blog/profiles/models.py*</b> 파일을 만들고 `Profile` model에 몇 가지 코드를 추가하도록 하겠습니다. 우리는 follow/unfollow, 내가 대상을 follow 했는지 여부, 대상이 나를 follow 했는지 여부에 대해 확인할 수 있는 함수를 추가해주었습니다.
+
+49. 추가된 model을 활용할 수 있도록 serializer에 코드를 작성하겠습니다. <b>*blog/profiles/api/serializers.py*</b> 파일을 열고 코드를 추가해줍시다.
+
+### Updating ProfileRetrieveAPIView
+
+50. Serializer를 만들었으니 이제 View 파일을 손 볼 차례입니다. <b>*blog/profiles/api/views.py*</b> 파일을 열고, `ProfileRetrieveAPIView` 부분을 수정하겠습니다. 이 부분에서 단지 `context`를 추가해주고, `request`를 받아 serialize 합니다.
+
+### Creating views for Following and Unfollowing
+
+51. 이제 본격적으로 follow 기능과 unfollow 기능을 다룰 view를 만들어보도록 하겠습니다. `ProfileFollowAPIView`를 만들고, unfollow를 위한 `delete`, follow를 위한 `post` 기능을 만들도록 하겠습니다.

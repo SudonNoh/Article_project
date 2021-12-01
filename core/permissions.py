@@ -24,6 +24,7 @@ class IsOwnerOrReadOnly(BasePermission):
         if request.user.is_authenticated:
             if request.user.is_staff == True:
                 return True
+            # method가 database에 영향이 없는 것들은 허용
             elif request.method in SAFE_METHODS:
                 return True
             elif hasattr(obj, 'author'):
