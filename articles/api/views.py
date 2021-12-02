@@ -27,7 +27,10 @@ class ArticleViewSet(
     serializer_class = ArticleSerializer
     
     def create(self, request):
-        serializer_context = {'author': request.user.profile}
+        serializer_context = {
+            'author': request.user.profile,
+            'request': request
+            }
         serializer_data = request.data
         serializer = self.serializer_class(
             data=serializer_data, context=serializer_context
@@ -38,17 +41,22 @@ class ArticleViewSet(
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def retrieve(self, request, slug):
+        serializer_context = {'request': request}
         try:
             serializer_instance = self.queryset.get(slug=slug)
         except Article.DoesNotExist:
             raise NotFound('An article with this slug does not exist.')
         
-        serializer = self.serializer_class(serializer_instance)
+        serializer = self.serializer_class(
+            serializer_instance,
+            context=serializer_context
+            )
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     # update시에 title이 변경되어도 기존에 있던 slug는 변경되지 않는다.
     def update(self, request, slug):
+        serializer_context = {'request': request}
         try:
             serializer_instance = self.queryset.get(slug=slug)
         except Article.DoesNotExist:
@@ -57,14 +65,28 @@ class ArticleViewSet(
         serializer_data = request.data
         
         serializer = self.serializer_class(
-            serializer_instance, data=serializer_data, partial=True
+            serializer_instance,
+            context=serializer_context,
+            data=serializer_data, 
+            partial=True
         )
         
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def list(self, request):
+        serializer_context = {'request': request}
+        serializer_instances = self.queryset.all()
+        
+        serializer = self.serializer_class(
+            serializer_instances,
+            context=serializer_context,
+            many=True
+        )
 
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CommentListCreateAPIView(generics.ListCreateAPIView):
     lookup_field ='article__slug'
@@ -106,6 +128,7 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
         
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
 class CommentsDestroyAPIView(generics.DestroyAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = Comment.objects.all()
@@ -119,6 +142,7 @@ class CommentsDestroyAPIView(generics.DestroyAPIView):
         comment.delete()
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
 
 class CommentUpdateAPIView(generics.UpdateAPIView):
     lookup_url_kwarg = 'comment_pk'

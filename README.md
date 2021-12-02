@@ -195,7 +195,24 @@
 
 ### Creating views for Following and Unfollowing
 
-51. 이제 본격적으로 follow 기능과 unfollow 기능을 다룰 view를 만들어보도록 하겠습니다. `ProfileFollowAPIView`를 만들고, unfollow를 위한 `delete`, follow를 위한 `post` 기능을 만들도록 하겠습니다.
+51. 이제 본격적으로 follow 기능과 unfollow 기능을 다룰 view를 만들어보도록 하겠습니다. `ProfileFollowAPIView`를 만들고, unfollow를 위한 `delete`, follow를 위한 `post` 기능을 만들도록 하겠습니다. <br><br>`get` 요청시에 요청한 사람이 url에 있는 사람을 follow한지 여부를 알 수 있습니다. <br><br>
+`http://127.0.0.1:8000/profile/host`
+`request.user : client3`
+```json
+{
+    "profile": {
+        "username": "host",
+        "birth_date": "1992-01-01",
+        "introduce": "",
+        "image": "",
+        "following": false
+    }
+}
+```
+나를 follow 한 사람을 알 수 있습니다.
+`host.profile.followed_by.all()`
+내가 follow 한 사람을 알 수 있습니다.
+`host.profile.follows.all()`
 
 ### Favoriting
 
@@ -204,3 +221,7 @@
 ### Updating the Profile model
 
 52. 우리는 `Profile` 과 `Article` 사이에 앞서 follow기능을 만들었던 것과 같이 몇가지 utility를 추가해 `many-to-many` 관계를 추가하도록 하겠습니다. <b>*blog/profiles/models.py*</b> 파일을 열고 코드를 추가하도록 하겠습니다.
+
+53. 하던대로 ! 이번에도 serializer를 수정하겠습니다. <b>*blog/articles/serializers.py*</b> 파일을 열고 몇 개의 코드를 작성해줍니다.
+
+54. 다음으로 view를 수정해주도록 하겠습니다. serializer는 현재 요청을 context로 전달해 favorited에 대해 올바른 boolean 값으로 표시해야 합니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 `ArticleViewSet`에 코드를 추가하겠습니다.<br><br>request가 요청되는 모든 method에 context object를 만들어두었습니다. 우리는 더이상 `.list()` method에 의존할 수 없기 떄문에 우리는 `.list()`를 만들었습니다.
