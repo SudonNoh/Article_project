@@ -228,6 +228,6 @@
 
 ### Adding favoriting and unfavoriting endpoints
 
-56. 다음단계로 favoriting과 unfavoriting 기능을 view에 추가하도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 작성하겠습니다.
+55. 다음단계로 favoriting과 unfavoriting 기능을 view에 추가하도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 작성하겠습니다.
 
 *favorited*가 변경되지 않음. 확인이 필요함.
