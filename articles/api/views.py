@@ -1,8 +1,9 @@
 from functools import partial
-from rest_framework import generics, mixins, status, viewsets
+from rest_framework import generics, mixins, serializers, status, viewsets
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from articles.models import (
     Article, Comment
@@ -77,6 +78,8 @@ class ArticleViewSet(
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def list(self, request):
+        # 해당 유저가 favorite을 했는지 안했는지 여부를 알기 위해 context를 추가
+        # 로그인 유저의 정보를 함께 보내줌
         serializer_context = {'request': request}
         serializer_instances = self.queryset.all()
         
@@ -170,3 +173,47 @@ class CommentUpdateAPIView(generics.UpdateAPIView):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
         
+
+class ArticlesFavoriteAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (ArticleJSONRenderer,)
+    serializer_class = ArticleSerializer
+    
+    def delete(self, request, article_slug=None):
+        profile = self.request.user.profile
+        serializer_context = {'request': request}
+        
+        try:
+            article = Article.objects.get(slug=article_slug)
+        except Article.DoesNotExist:
+            raise NotFound('An article with this slug was not found.')
+
+        profile.unfavorite(article)
+        
+        serializer = self.serializer_class(
+            article,
+            context=serializer_context
+        )
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, article_slug=None):
+        # user 의 profile을 불러온다.
+        profile = self.request.user.profile
+        # serializer_context로 request 
+        serializer_context = {'request': request}
+        
+        try:
+            article = Article.objects.get(slug=article_slug)
+            
+        except Article.DoesNotExist:
+            raise NotFound('An article with this slug was not found.')
+        
+        profile.favorite(article)
+        
+        serializer = self.serializer_class(
+            article,
+            context=serializer_context
+        )
+        
+        return Response(serializer.data, status.HTTP_201_CREATED)
