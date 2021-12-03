@@ -48,12 +48,12 @@ class ArticleSerializer(serializers.ModelSerializer):
     
     # Favorite methods
     def get_favorited(self, instance):
-        request = self.context.get('reqeust', None)
+        request = self.context.get('request', None)
         
         if request is None:
             return False
         
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return False
         
         return request.user.profile.has_favorited(instance)

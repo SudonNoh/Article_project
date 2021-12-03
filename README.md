@@ -209,6 +209,7 @@
     }
 }
 ```
+`host = User.objects.get(username="host")`
 나를 follow 한 사람을 알 수 있습니다.
 `host.profile.followed_by.all()`
 내가 follow 한 사람을 알 수 있습니다.
@@ -228,6 +229,13 @@
 
 ### Adding favoriting and unfavoriting endpoints
 
-55. 다음단계로 favoriting과 unfavoriting 기능을 view에 추가하도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 작성하겠습니다.
+55. 다음단계로 favoriting과 unfavoriting 기능을 view에 추가하도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 작성하겠습니다. 이후에 postman으로 기능들을 확인해보도록 하겠습니다.
 
-*favorited*가 변경되지 않음. 확인이 필요함.
+내가 좋아요 누른 기사 목록
+`client3 = User.objects.get(username="client3")`
+`client3.profile.favorites.all()`
+
+
+기사에 좋아요 누른 사람들
+`article2 = Article.objects.get(id=2)`
+`article2.favorited_by.all()`
