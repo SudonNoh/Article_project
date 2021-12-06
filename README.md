@@ -1,9 +1,3 @@
-# 목표
-1. follow list 목록 만들어보기
-2. AWS DB와 연결해서 배포
-3. social login 기능 추가
-
-
 ### User
 ### Creating the User model
 1. Secret Key와 settings.py 파일을 분리하기 위해 <b>*blog/secrests.json*</b>을 manage.py이 있는 project 상위 폴더에 만듭니다. Secret Key가 git에 upload할 때 포함되지 않도록 <b>*blog/.gitignore*</b> 파일에 추가해줍니다.
@@ -276,4 +270,18 @@ Pagination 기능을 넣어보도록 하겠습니다. 해당 기능은 page load
 
 ### Pagination Settings
 
-64. Pagination 기능을 추가해주기 위한 과정 중 첫번째로 settings.py 파일에 두 가지 새로운 setting을 추가해주도록 하겠습니다. <b>*blog/Setting/settings.py*</b> 파일을 열고, `REST_FRAMEWORK` 부분에 코드를 추가합니다.
+64. Pagination 기능을 추가해주기 위한 과정 중 첫번째로 settings.py 파일에 두 가지 새로운 setting을 추가해주도록 하겠습니다. <b>*blog/Setting/settings.py*</b> 파일을 열고, `REST_FRAMEWORK` 부분에 코드를 추가합니다.<br><br>DRF는 pagination 방법에 대해 두 가지 방법을 제공합니다. 그 중 우리가 선택한 것은 `LimitOffsetPagination` 입니다. 이렇게 하면 client가 여러 page를 반환하는 endpoint에 두 가지 parameter를 전달할 수 있습니다. `limit`과 `offset` 입니다.<br><br>`limit`은 반환할 문서의 수를 나타냅니다. `offset`은 한 page에 대해 반환할 문서를 찾기 시작할 곳입니다. `PAGE_SIZE` setting으로 인해 `limit`은 default 값으로 20을 갖게 됩니다.<br><br>이해하기 쉽도록 예를 들어보겠습니다. user가 article list를 이미 4번째 page까지 봤고, 지금 다섯번째 page를 loading하고 있는 상황이라고 가정하겠습니다. client가 `limit` query parameter를 따로 명시하지 않았고, 그 때문에 defalut 값인 `20`을 사용하고 있습니다. 4번째 page까지 본 상황이기 때문에 이미 user는 0번부터 79번째 글까지 list에서 확인한 상황입니다. 5번째 page에 대해서 우리는 80-99번 articles를 보여줄 예정입니다. 따라서 client는 `offset`을 `80`으로 전달할 겁니다. 만약 client가 `offset`을 전달하지 않으면 결과는 `0-19`에 해당하는 list를 반환하게 됩니다.
+
+### Updating BaseJSONRenderer
+
+65. 다음으로 renderer를 update 할 필요가 있습니다. <b>*blog/core/renderers.py*</b> 파일을 열고, 다음을 입력해줍니다. 여기에 정리된 내용이 우리가 paginated data를 rendering 처리 할 수 있습니다. <br><br> 앞서 정의했던 내용에서 변경된 부분은 `ReturnList`에 대해 type을 확인했던 것을 `result key`(data.get('result', None))를 검사한다는 것입니다.
+
+### Updating the other renderers
+
+66. 이제 바뀐 renderer를 각 app의 renderer에 적용시켜보도록 하겠습니다. <b>*blog/articles/api/renderers.py*</b>, <b>*blog/authentication/api/renderers.py*</b>, <b>*blog/profiles/renderers.py*</b> 파일들을 열고, 차례로 코드를 수정해줍니다. 
+
+### Paginating Articles
+
+67. `ArticleViewSet`에서 작성했던 `.list()` method를 수정해주어야 합니다. DRF의 `.list()` method는 기본 pagination을 지원하지만, 우리는 우리가 정의한 method를 추가해야합니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 몇몇 부분을 수정해주겠습니다.
+
+68. Postman에서 "All articles" 요청을 보내보도록 하겠습니다. 그 결과 값으로 articles 하단에 `articlesCount` 값이 올바르게 나오면 성공적으로 pagination이 적용된 것입니다.

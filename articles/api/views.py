@@ -83,16 +83,17 @@ class ArticleViewSet(
         # 해당 유저가 favorite을 했는지 안했는지 여부를 알기 위해 context를 추가
         # 로그인 유저의 정보를 함께 보내줌
         serializer_context = {'request': request}
-        serializer_instances = self.queryset.all()
+        page = self.paginate_queryset(self.queryset)
         
         serializer = self.serializer_class(
-            serializer_instances,
+            page,
             context=serializer_context,
             many=True
         )
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+        return self.get_paginated_response(serializer.data)
+    
+    
 class CommentListCreateAPIView(generics.ListCreateAPIView):
     lookup_field ='article__slug'
     # url에서 만약 '<str:artiicle_slug>' 부분이 있다면

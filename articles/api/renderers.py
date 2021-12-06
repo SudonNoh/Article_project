@@ -3,9 +3,11 @@ from core.renderers import BaseJSONRenderer
 
 class ArticleJSONRenderer(BaseJSONRenderer):
     object_label = 'article'
-    object_label_plural = 'articles'
+    pagination_object_label = 'articles'
+    pagination_count_label = 'articlesCount'
 
 
 class CommentJSONRenderer(BaseJSONRenderer):
     object_label = 'comment'
-    object_label_plural = 'comments'
+    pagination_object_label = 'comments'
+    pagination_count_label = 'commentsCount'
