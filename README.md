@@ -239,3 +239,23 @@
 기사에 좋아요 누른 사람들
 `article2 = Article.objects.get(id=2)`
 `article2.favorited_by.all()`
+
+### Tagging
+
+홈페이지를 사용하는 User들이 그들이 원하는 것을 찾기 쉽도록 하기 위해서 tag 기능을 추가할 예정입니다.
+
+### Creating the Tag model
+
+56. 언제나 그랬듯 Tag model 을 먼저 추가해주도록 하겠습니다. <b>*blog/articles/models.py*</b> 파일을 열고, Tag model을 추가해주도록 하겠습니다.
+
+57. 그 다음, Article model에 tag를 many-to-many 관계로 연결해주겠습니다. 
+
+### Serializing Tag objects
+
+58. Serializer를 만들 때는 기존과는 다른 방식으로 만들어보도록 하겠습니다. 왜냐하면 user나 article object를 serializing 할 때는 그들을 namespace하기를 원했지만 Tag model의 경우 그럴 필요가 없기 때문입니다. tags에 대해서는 문자열로 된 배열로 구성하려고 합니다.<br><br>또 한가지 다른 점은 user가 article을 작성할 때 tag가 존재하지 않는 경우 tag를 만들어야 한다는 점입니다. 보통 우리는 이런 경우에(존재하지 않는 경우) exception error를 보냅니다. 만약 우리가 자동으로 tag가 만들어지도록 하지 않는다면 user가 tag를 사용할 때마다(article을 만들 때마다) tag를 미리 만들어두어야 한다는 것입니다.<br><br>이런 목적으로 tags에 대한 특별한 serializer를 만들어야 합니다.<br><br><b>*blog/articles/api/relations.py*</b> 파일을 만들고 코드를 입력합니다.
+
+### Serializing Articles with Tags
+
+59. 다음 단계는 이전 단계에서 만든 special field를 적용시켜 보도록 하겠습니다. <b>*blog/articles/api/serializers.py*</b> 파일을 열고, 코드를 작성하도록 하겠습니다.
+
+### Tagging Articles with Postman
