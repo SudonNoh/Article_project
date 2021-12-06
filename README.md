@@ -259,3 +259,21 @@
 59. 다음 단계는 이전 단계에서 만든 special field를 적용시켜 보도록 하겠습니다. <b>*blog/articles/api/serializers.py*</b> 파일을 열고, 코드를 작성하도록 하겠습니다.
 
 ### Tagging Articles with Postman
+
+60. Postman을 열고, "All Articles" request를 보내보겠습니다. 응답된 List에서 `"tagList": [],` 비어있는 List를 확인할 수 있습니다. 다음으로 "Create Article" request를 보내겠습니다. 이때 data에는 `"tagList": ["training", "dragons"],`를 추가해서 보내겠습니다. 다음 해당 Article을 검색해보면 추가된 tagList를 확인할 수 있습니다.
+
+### Serializing Tag objects
+
+61. 모든 Tag를 볼 수 있는 기능을 만들어보도록 하겠습니다. <b>*blog/articles/api/serializers.py*</b> 파일을 열고, `TagSerializer`를 만들어줍니다.
+
+62. 이어서 <b>*blog/articles/api/views.py*</b> 파일에 `TagListAPIView`를 만들고, <b>*blog/articles/api/urls.py*</b> 파일에 url을 추가해줍니다.
+
+63. Postman 에서 입력한 Tag들을 확인해보도록 하겠습니다.
+
+### Pagination
+
+Pagination 기능을 넣어보도록 하겠습니다. 해당 기능은 page loading 시간을 줄여 user들이 더욱 쾌적한 환경에서 app을 사용할 수 있도록 도와줍니다.<br><br>만약 Pagination이 적용되지 않았을 경우, data가 많은 app일수록 DB에서 조회하고 불러오는 과정에서 많은 시간이 걸릴 겁니다. 이 Pagination을 적용시켜주면, 한 page당 검색 결과를 제한시켜 loading 시간을 줄입니다.
+
+### Pagination Settings
+
+64. Pagination 기능을 추가해주기 위한 과정 중 첫번째로 settings.py 파일에 두 가지 새로운 setting을 추가해주도록 하겠습니다. <b>*blog/Setting/settings.py*</b> 파일을 열고, `REST_FRAMEWORK` 부분에 코드를 추가합니다.

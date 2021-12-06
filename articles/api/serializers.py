@@ -1,10 +1,9 @@
-from typing_extensions import Required
 from rest_framework import serializers
 from rest_framework.utils import serializer_helpers
 
 from profiles.api.serializers import ProfileSerializer
 
-from articles.models import Article, Comment
+from articles.models import Article, Comment, Tag
 from .relations import TagRelatedField
 
 
@@ -103,3 +102,12 @@ class CommentSerializer(serializers.ModelSerializer):
     
     def get_updated_at(self, instance):
         return instance.updated_at.isoformat()
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('tag',)
+        
+    def to_representation(self, instance):
+        return instance.tag

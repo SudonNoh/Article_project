@@ -1,16 +1,18 @@
 from functools import partial
 from rest_framework import generics, mixins, serializers, status, viewsets
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+    AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from articles.models import (
-    Article, Comment
+    Article, Comment, Tag
     )
 from .renderers import ArticleJSONRenderer, CommentJSONRenderer
 from .serializers import (
-    ArticleSerializer, CommentSerializer
+    ArticleSerializer, CommentSerializer, TagSerializer
     )
 from core.permissions import IsOwnerOnly
 
@@ -217,3 +219,17 @@ class ArticlesFavoriteAPIView(APIView):
         )
         
         return Response(serializer.data, status.HTTP_201_CREATED)
+    
+
+class TagListAPIView(generics.ListAPIView):
+    queryset = Tag.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = TagSerializer
+    
+    def get(self, request):
+        serializer_data = self.get_queryset()
+        serializer = self.serializer_class(serializer_data, many=True)
+        
+        return Response({
+            'tags': serializer.data
+        }, status=status.HTTP_200_OK)
