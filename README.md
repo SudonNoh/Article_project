@@ -223,16 +223,15 @@
 
 ### Adding favoriting and unfavoriting endpoints
 
-55. 다음단계로 favoriting과 unfavoriting 기능을 view에 추가하도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 작성하겠습니다. 이후에 postman으로 기능들을 확인해보도록 하겠습니다.
+55. 다음단계로 favoriting과 unfavoriting 기능을 view에 추가하도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 작성하겠습니다. 이후에 postman으로 기능들을 확인해보도록 하겠습니다.<br><br>
 
-내가 좋아요 누른 기사 목록
-`client3 = User.objects.get(username="client3")`
-`client3.profile.favorites.all()`
+내가 좋아요 누른 기사 목록<br>
+`client3 = User.objects.get(username="client3")`<br>
+`client3.profile.favorites.all()`<br>
 
-
-기사에 좋아요 누른 사람들
-`article2 = Article.objects.get(id=2)`
-`article2.favorited_by.all()`
+기사에 좋아요 누른 사람들<br>
+`article2 = Article.objects.get(id=2)`<br>
+`article2.favorited_by.all()`<br>
 
 ### Tagging
 
@@ -285,3 +284,13 @@ Pagination 기능을 넣어보도록 하겠습니다. 해당 기능은 page load
 67. `ArticleViewSet`에서 작성했던 `.list()` method를 수정해주어야 합니다. DRF의 `.list()` method는 기본 pagination을 지원하지만, 우리는 우리가 정의한 method를 추가해야합니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 몇몇 부분을 수정해주겠습니다.
 
 68. Postman에서 "All articles" 요청을 보내보도록 하겠습니다. 그 결과 값으로 articles 하단에 `articlesCount` 값이 올바르게 나오면 성공적으로 pagination이 적용된 것입니다.
+
+### Filtering
+
+filtering 기능은 user들이 원하는 것을 더 구체적으로 보여주는 기능입니다. 이번 장에서는 현재 접속한 user가 follow한 author의 article 목록을 보여주는 새로운 endpoint를 추가할 예정입니다. 또 article list에 대한 filtering 기능을 추가할겁니다. 이번 장이 끝나면 User들은 author, tag, favorited articles를 filtering 할 수 있을 겁니다.
+
+### Creating a feed endpoint
+
+69. 첫번째로 현재 user가 follow하는 모든 사람이 post한 article들을 보기 위한 endpoint를 만들어보겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 입력합니다.<br><br>이 파일에 `ArticlesFeedAPIView`를 추가해줍니다. 
+
+70. url 을 <b>*blog/artcles/api/urls.py*</b> 파일에 지정해주고, Postman에서 follow한 작가의 글들이 올바르게 보이는지 확인해보도록 하겠습니다. 만약 올바르게 잘나온다면 다음 단계로 넘어가도 좋습니다.

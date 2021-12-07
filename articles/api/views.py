@@ -234,3 +234,37 @@ class TagListAPIView(generics.ListAPIView):
         return Response({
             'tags': serializer.data
         }, status=status.HTTP_200_OK)
+        
+        
+class ArticlesFeedAPIView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Article.objects.all()
+    renderer_classes = (ArticleJSONRenderer,)
+    serializer_class = ArticleSerializer
+    
+    # filter에 먼저 Article에서의 원하는 field 이름(author)을 적는다.
+    # __ 를 적으면 해당 relation의 필드로 접근이 가능하다. 만약 author__introduce면
+    # profile model의 introduce에 접근할 수 있다.
+    # __in : list, tuple, string 또는 queryset과 같이 iterable한 객체를 대상으로
+    # 각 원소를 조회함
+    # Django ORM : https://brownbears.tistory.com/63
+    def get_queryset(self):
+        return Article.objects.filter(
+            author__in = self.request.user.profile.follows.all()
+        )
+        
+    def get(self, request):
+        queryset = self.get_queryset()
+        """
+        paginate_queryset()
+        결과들의 한 page를 반환합니다. 만약 결과가 없는 경우 None값을 반환합니다.
+        """
+        page = self.paginate_queryset(queryset)
+        
+        serializer_context = {'request': request}
+        serializer = self.serializer_class(
+            page, context=serializer_context, many=True
+        )
+        
+        return self.get_paginated_response(serializer.data)
+        

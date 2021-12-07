@@ -9,6 +9,7 @@ from .views import (
     CommentsDestroyAPIView,
     ArticlesFavoriteAPIView,
     TagListAPIView,
+    ArticlesFeedAPIView
 )
 
 # APPEND_SLASH=False : When use trailing_slash, you should put it in settings.
@@ -32,5 +33,8 @@ urlpatterns = [
     ),
     path(
         'tags/all', TagListAPIView.as_view(),
+    ),
+    path(
+        'feed/all', ArticlesFeedAPIView.as_view(),
     )
 ]
