@@ -294,3 +294,13 @@ filtering 기능은 user들이 원하는 것을 더 구체적으로 보여주는
 69. 첫번째로 현재 user가 follow하는 모든 사람이 post한 article들을 보기 위한 endpoint를 만들어보겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 코드를 입력합니다.<br><br>이 파일에 `ArticlesFeedAPIView`를 추가해줍니다. 
 
 70. url 을 <b>*blog/artcles/api/urls.py*</b> 파일에 지정해주고, Postman에서 follow한 작가의 글들이 올바르게 보이는지 확인해보도록 하겠습니다. 만약 올바르게 잘나온다면 다음 단계로 넘어가도 좋습니다.
+
+### Filtering by author, favorited, and tags
+
+이제 User들이 author, tags, favorite 여부에 따라서 filtering 할 수 있는 기능을 추가하도록 하겠습니다.
+
+71. 먼저 view를 손보도록 하겠습니다. <b>*blog/articles/api/views.py*</b> 파일을 열고 `ArticleViewSet`에 코드를 추가하도록 하겠습니다. 이제 각각 기능을 articles by author, articles by tag, articles by favorited_by 로 postman에 만들어 보내보겠습니다.<br><br>
+
+### Outro
+
+이것으로 Tutorial 과정이 끝났습니다. commit을 순서대로 했기 때문에 순서대로 따라오시는 과정에 문제는 없으셨을 겁니다.<br><br> 다만 수정을 여러번 거친 경우도 있기 때문에 가독성이 조금 떨어질 것으로 생각됩니다. 따라서 제 개인 blog에 다른 방식으로 더욱 깔끔하게 업로드 할 예정이니 궁금하신 분들은 그쪽을 확인해주시기 바랍니다.<br><br>감사합니다.<br><br>위의 글은 [RealWorld - DRF](https://github.com/lolripgg/conduit-django-markdown)를 참고해서 작성한 글입니다.
