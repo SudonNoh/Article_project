@@ -304,3 +304,4 @@ filtering 기능은 user들이 원하는 것을 더 구체적으로 보여주는
 ### Outro
 
 이것으로 Tutorial 과정이 끝났습니다. commit을 순서대로 했기 때문에 순서대로 따라오시는 과정에 문제는 없으셨을 겁니다.<br><br> 다만 수정을 여러번 거친 경우도 있기 때문에 가독성이 조금 떨어질 것으로 생각됩니다. 따라서 제 개인 blog에 다른 방식으로 더욱 깔끔하게 업로드 할 예정이니 궁금하신 분들은 그쪽을 확인해주시기 바랍니다.<br><br>감사합니다.<br><br>위의 글은 [RealWorld - DRF](https://github.com/lolripgg/conduit-django-markdown)를 참고해서 작성한 글입니다.
+
