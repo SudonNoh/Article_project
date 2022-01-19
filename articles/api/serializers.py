@@ -39,10 +39,16 @@ class ArticleSerializer(serializers.ModelSerializer):
         ]
         
     def create(self, validated_data):
+        # view에서 넘어온 context에서 'author'에 해당하는 부분을 받는다.
         author = self.context.get('author', None)
         
+        # 넘어온 view에서 넘어온 데이터, 유효성 검사가 끝난 데이터 중 'tags'에
+        # 해당하는 데이터들을 받아온다. 그 데이터의 type은 list([]) 형태이다.
         tags = validated_data.pop('tags', [])
         
+        # 위의 serializer field를 정의하는 부분에서 author는 profile serializer를
+        # 불러오고, read_only로 정의했었따. 그 값을 담아서 Article로 Post 하기 위해서
+        # author를 context로 받고, create에 요소로 추가한다.
         article = Article.objects.create(author=author, **validated_data)
         
         for tag in tags:
